@@ -15,7 +15,7 @@ public class MyClient {
     private Logger log = LoggerFactory.getLogger(MyClient.class);
 
     private final static String REMOTE_HOST = "localhost";
-    private final static int REMOTE_PORT = 2004;
+    private final static int REMOTE_PORT = 1205;
     private final static int MESSAGES_COUNT_TO_SEND = 1057;
 
     private Socket socket;
