@@ -26,8 +26,11 @@ public class ServiceHandler extends Thread {
 
             log.debug("Connection received from {}", socket.getInetAddress().getHostName());
 
-            RequestMessage message = (RequestMessage) in.readObject();
-            log.debug("Message received, message: {}", message);
+            RequestMessage message = null;
+            do {
+                message = (RequestMessage) in.readObject();
+                log.debug("Message received, message: {}", message);
+            } while (message.getSeq() < 1057);
 
 //            sendMessage("Connection successful", out);
 /*
