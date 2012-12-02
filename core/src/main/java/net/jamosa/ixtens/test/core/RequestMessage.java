@@ -2,23 +2,23 @@ package net.jamosa.ixtens.test.core;
 
 import java.io.Serializable;
 
-public class Message implements Serializable {
+public class RequestMessage implements Serializable {
 
     private static final long serialVersionUID = -7526888471310905868L;
 
-    private Long seq;
+    private int seq;
     private String serviceName;
     private String methodName;
     private Object[] args;
 
-    public Message() {
+    public RequestMessage() {
     }
 
-    public Long getSeq() {
+    public int getSeq() {
         return seq;
     }
 
-    public void setSeq(Long seq) {
+    public void setSeq(int seq) {
         this.seq = seq;
     }
 
