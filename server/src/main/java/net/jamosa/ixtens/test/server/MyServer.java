@@ -1,6 +1,5 @@
 package net.jamosa.ixtens.test.server;
 
-import com.sun.corba.se.spi.orbutil.fsm.Input;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,13 +13,14 @@ public class MyServer {
 
     private Logger log = LoggerFactory.getLogger(MyServer.class);
 
-    private static final int MAX_CONNECTIONS = 2831;
+    private static final String MAX_CONNECTIONS = "2831";
     private static final String DEFAULT_PORT = "1205";
 
     private ServerSocket serverSocket;
     private int connectionsCount = 0;
 
     private int port;
+    private int maxConnections;
 
     public MyServer() {
     }
@@ -36,7 +36,9 @@ public class MyServer {
         serverConfig.load(configInputStream);
 
         String portValue = serverConfig.getProperty("port", DEFAULT_PORT);
+        String maxConnectionsValue = serverConfig.getProperty("max_connections", MAX_CONNECTIONS);
         port = Integer.parseInt(portValue);
+        maxConnections = Integer.parseInt(maxConnectionsValue);
     }
 
     public void start() throws IOException {
@@ -44,7 +46,7 @@ public class MyServer {
         serverSocket = new ServerSocket(port);
 
         // TODO: Move to connections pool logic
-        while (connectionsCount < MAX_CONNECTIONS) {
+        while (connectionsCount < maxConnections) {
                 log.debug("Waiting for clientSocket");
                 Socket clientSocket = serverSocket.accept();
                 ServiceHandler serviceHandler = new ServiceHandler(clientSocket);

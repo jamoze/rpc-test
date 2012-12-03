@@ -1,6 +1,8 @@
 package net.jamosa.ixtens.test.client;
 
+import net.jamosa.ixtens.test.core.Client;
 import net.jamosa.ixtens.test.core.RequestMessage;
+import net.jamosa.ixtens.test.core.ResponseMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,7 +12,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.rmi.UnknownHostException;
 
-public class MyClient {
+public class MyClient extends Client {
 
     private Logger log = LoggerFactory.getLogger(MyClient.class);
 
@@ -24,7 +26,8 @@ public class MyClient {
 
     private final Object lock = new Object();
 
-    public MyClient() {
+    public MyClient(String host, int port) {
+        super(host, port);
     }
 
     void run() {
@@ -32,31 +35,17 @@ public class MyClient {
             socket = new Socket(REMOTE_HOST, REMOTE_PORT);
             log.debug("Connected to localhost in port {}", REMOTE_PORT);
             out = new ObjectOutputStream(socket.getOutputStream());
-            // TODO: Why do we need this?
-            // out.flush();
             in = new ObjectInputStream(socket.getInputStream());
-/*
-            do {
-                try {
-                    message = (String) in.readObject();
-                    log.debug("server>{}", message);
-                    sendMessage("Hi my server");
-                    message = "bye";
-                    sendMessage(message);
-                } catch (ClassNotFoundException e) {
-                    log.error(e.getMessage(), e);
-                }
-            } while (!message.equals("bye"));
-*/
 
             for (int i = 0; i < MESSAGES_COUNT_TO_SEND; i++) {
-                RequestMessage message = new RequestMessage();
-                message.setSeq(i);
-                message.setServiceName("service1");
-                message.setMethodName("method1");
-                message.setArgs(new Object[]{"abv", 10l + i * 105, 1.2d / i});
+                RequestMessage req = new RequestMessage();
+                req.setSeq(i);
+                req.setServiceName("service1");
+                req.setMethodName("method1");
+                req.setArgs(new Object[]{"abv", 10l + i * 105, 1.2d / i});
 
-                sendMessage(message);
+                ResponseMessage resp = remoteCall(req);
+                log.info("Response from server: seq={}, result={}", resp.getSeq(), resp.getResult());
 
                 synchronized (lock) {
                     try {
@@ -82,18 +71,25 @@ public class MyClient {
         }
     }
 
-    private void sendMessage(RequestMessage msg) {
+
+    @Override
+    public ResponseMessage remoteCall(RequestMessage msg) {
         try {
             out.writeObject(msg);
             out.flush();
             log.debug("client > this:{}, msg:{}", this, msg);
+            return (ResponseMessage) in.readObject();
         } catch (IOException e) {
             log.error(e.getMessage(), e);
+        } catch (ClassNotFoundException e) {
+            log.error(e.getMessage(), e);
         }
+        return null;
     }
 
+
     public static void main(String args[]) {
-        MyClient client = new MyClient();
+        MyClient client = new MyClient(REMOTE_HOST, REMOTE_PORT);
         client.run();
     }
 }

@@ -1,6 +1,7 @@
 package net.jamosa.ixtens.test.server;
 
 import net.jamosa.ixtens.test.core.RequestMessage;
+import net.jamosa.ixtens.test.core.ResponseMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -8,6 +9,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.Date;
 
 public class ServiceHandler extends Thread {
 
@@ -26,11 +28,17 @@ public class ServiceHandler extends Thread {
 
             log.debug("Connection received from {}", socket.getInetAddress().getHostName());
 
-            RequestMessage message = null;
+            RequestMessage req;
             do {
-                message = (RequestMessage) in.readObject();
-                log.debug("Message received, message: {}", message);
-            } while (message.getSeq() < 1057);
+                req = (RequestMessage) in.readObject();
+                log.debug("Message received, message: {}", req);
+
+                ResponseMessage resp = new ResponseMessage();
+                resp.setSeq(req.getSeq());
+                resp.setResult(new Date());
+                out.writeObject(resp);
+                out.flush();
+            } while (req.getSeq() < 1057);
 
 //            sendMessage("Connection successful", out);
 /*

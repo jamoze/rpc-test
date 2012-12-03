@@ -6,17 +6,17 @@ public class ResponseMessage implements Serializable {
 
     private static final long serialVersionUID = 5983744583807607284L;
 
-    private Long seq;
+    private int seq;
     private Object result;
 
     public ResponseMessage() {
     }
 
-    public Long getSeq() {
+    public int getSeq() {
         return seq;
     }
 
-    public void setSeq(Long seq) {
+    public void setSeq(int seq) {
         this.seq = seq;
     }
 
