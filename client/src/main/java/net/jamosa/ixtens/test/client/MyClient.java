@@ -40,9 +40,9 @@ public class MyClient extends Client {
             for (int i = 0; i < MESSAGES_COUNT_TO_SEND; i++) {
                 RequestMessage req = new RequestMessage();
                 req.setSeq(i);
-                req.setServiceName("service1");
-                req.setMethodName("method1");
-                req.setArgs(new Object[]{"abv", 10l + i * 105, 1.2d / i});
+                req.setServiceName("dateTime");
+                req.setMethodName("getDoomsdayLeft");
+                req.setArgs(new Object[]{});
 
                 ResponseMessage resp = remoteCall(req);
                 log.info("Response from server: seq={}, result={}", resp.getSeq(), resp.getResult());
