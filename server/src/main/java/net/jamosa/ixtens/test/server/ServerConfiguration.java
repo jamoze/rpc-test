@@ -20,7 +20,7 @@ public class ServerConfiguration {
     private int port;
     private int maxConnections;
 
-    private Map services;
+    private Map<String, String> services;
 
     public ServerConfiguration(InputStream configInputStream) throws IOException {
         Properties props = new Properties();
@@ -35,7 +35,7 @@ public class ServerConfiguration {
         log.info("Connection pool size: " + maxConnections);
 
         Set<String> propertyNames = props.stringPropertyNames();
-        Map services = new HashMap();
+        services = new HashMap<String, String>();
         for (String propertyName : propertyNames) {
             if (propertyName.startsWith("service")) {
                 String serviceName = propertyName.substring(propertyName.indexOf('.') + 1);
@@ -54,7 +54,7 @@ public class ServerConfiguration {
         return maxConnections;
     }
 
-    public Map getServices() {
+    public Map<String, String> getServices() {
         return services;
     }
 }

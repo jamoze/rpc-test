@@ -38,7 +38,7 @@ public class MyServer {
         while (connectionsCount < serverConfig.getMaxConnections()) {
                 log.debug("Waiting for clientSocket");
                 Socket clientSocket = serverSocket.accept();
-                ServiceHandler serviceHandler = new ServiceHandler(clientSocket);
+                ServiceHandler serviceHandler = new ServiceHandler(serverConfig, clientSocket);
                 serviceHandler.start();
                 connectionsCount++;
         }
