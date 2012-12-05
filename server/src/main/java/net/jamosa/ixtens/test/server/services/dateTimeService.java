@@ -4,15 +4,21 @@ import java.util.Date;
 
 public class DateTimeService implements IService {
 
-    private final Date doomsdayTime = new Date(1356127200L);
+    private Date doomsdayTime = new Date(112, 11, 21);
 
     public Date getCurrentDateTime() {
         return new Date();
     }
 
-    public long getDoomsdayLeft() {
+
+    public String getDoomsdayLeft() {
         Date now = new Date();
-        return (doomsdayTime.getTime() - now.getTime()) /1000;
+        long millis = doomsdayTime.getTime() - now.getTime();
+        long seconds = millis / 1000;
+        long minutes = seconds / 60;
+        long hours = minutes / 60;
+        long days = hours / 24;
+        return  "Time left: " + days + " days or " + hours + " hours, or " + minutes + " minutes, or " + seconds + " seconds";
     }
 
 }
