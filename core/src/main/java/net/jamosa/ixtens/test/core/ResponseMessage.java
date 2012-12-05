@@ -1,5 +1,7 @@
 package net.jamosa.ixtens.test.core;
 
+import net.jamosa.ixtens.test.core.exceptions.ServerException;
+
 import java.io.Serializable;
 
 public class ResponseMessage implements Serializable {
@@ -8,6 +10,8 @@ public class ResponseMessage implements Serializable {
 
     private int seq;
     private Object result;
+
+    private ServerException serverError;
 
     public ResponseMessage() {
     }
@@ -26,6 +30,14 @@ public class ResponseMessage implements Serializable {
 
     public void setResult(Object result) {
         this.result = result;
+    }
+
+    public ServerException getServerError() {
+        return serverError;
+    }
+
+    public void setServerError(ServerException serverError) {
+        this.serverError = serverError;
     }
 
     @Override

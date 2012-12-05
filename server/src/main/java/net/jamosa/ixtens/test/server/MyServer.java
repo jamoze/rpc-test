@@ -1,5 +1,6 @@
 package net.jamosa.ixtens.test.server;
 
+import net.jamosa.ixtens.test.core.exceptions.ServerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,7 +15,7 @@ import java.util.concurrent.TimeUnit;
 
 public class MyServer {
 
-    private Logger log = LoggerFactory.getLogger(MyServer.class);
+    private static Logger log = LoggerFactory.getLogger(MyServer.class);
 
     private ServerSocket serverSocket;
     private int connectionsCount = 0;
@@ -30,7 +31,7 @@ public class MyServer {
         return serverSocket;
     }
 
-    public void init() throws IOException {
+    public void init() throws ServerException {
         // Loading configuration
         InputStream configInputStream = ClassLoader.class.getResourceAsStream("/server.properties");
         serverConfig = new ServerConfiguration(configInputStream);
@@ -71,16 +72,23 @@ public class MyServer {
         }
     }
 
-
-    public static void main(String args[]) throws IOException {
+    public static void main(String args[]) {
         MyServer server = new MyServer();
         ServerSocket socket = server.getServerSocket();
         try {
             server.init();
             server.start();
+        } catch (ServerException e) {
+            log.error(e.getMessage(), e);
+        } catch (IOException e) {
+            log.error(e.getMessage(), e);
         } finally {
             if (socket != null) {
-                socket.close();
+                try {
+                    socket.close();
+                } catch (IOException e) {
+                    log.error(e.getMessage(), e);
+                }
             }
         }
     }

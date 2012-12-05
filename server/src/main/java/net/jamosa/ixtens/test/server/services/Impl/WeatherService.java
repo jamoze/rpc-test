@@ -1,4 +1,6 @@
-package net.jamosa.ixtens.test.server.services;
+package net.jamosa.ixtens.test.server.services.impl;
+
+import net.jamosa.ixtens.test.server.services.IService;
 
 import java.util.Date;
 import java.util.Random;

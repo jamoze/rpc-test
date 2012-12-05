@@ -38,14 +38,33 @@ public class MyClient extends Client {
             in = new ObjectInputStream(socket.getInputStream());
 
             for (int i = 0; i < MESSAGES_COUNT_TO_SEND; i++) {
-                RequestMessage req = new RequestMessage();
-                req.setSeq(i);
-                req.setServiceName("dateTime");
-                req.setMethodName("getDoomsdayLeft");
-                req.setArgs(new Object[]{});
+                RequestMessage req1 = new RequestMessage();
 
-                ResponseMessage resp = remoteCall(req);
-                log.info("Response from server: seq={}, result={}", resp.getSeq(), resp.getResult());
+                req1.setSeq(i);
+                req1.setServiceName("dateTime");
+                req1.setMethodName("getDoomsdayLeft");
+                req1.setArgs(new Object[]{});
+
+                ResponseMessage resp1 = remoteCall(req1);
+                log.debug("Response from server: seq={}, result={}", resp1.getSeq(), resp1.getResult());
+
+                RequestMessage req2 = new RequestMessage();
+                req2.setSeq(i++);
+                req2.setServiceName("dateTime");
+                req2.setMethodName("foo");
+                req2.setArgs(new Object[]{127});
+
+                ResponseMessage resp2 = remoteCall(req2);
+                log.info("Response from server: seq={}, result={}", resp2.getSeq(), resp2.getResult());
+
+                RequestMessage req3 = new RequestMessage();
+                req3.setSeq(i++);
+                req3.setServiceName("dateTime");
+                req3.setMethodName("getDoomsdayLeft");
+                req3.setArgs(new Object[]{});
+
+                ResponseMessage resp3 = remoteCall(req3);
+                log.info("Response from server: seq={}, result={}", resp3.getSeq(), resp3.getResult());
 
                 synchronized (lock) {
                     try {
