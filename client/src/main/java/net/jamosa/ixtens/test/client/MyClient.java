@@ -3,7 +3,6 @@ package net.jamosa.ixtens.test.client;
 import net.jamosa.ixtens.test.core.Client;
 import net.jamosa.ixtens.test.core.RequestMessage;
 import net.jamosa.ixtens.test.core.ResponseMessage;
-import net.jamosa.ixtens.test.core.exceptions.ServerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,17 +43,11 @@ public class MyClient extends Client {
                 req1.setSeq(i);
                 req1.setServiceName("dateTime");
                 req1.setMethodName("getDoomsdayLeft");
-                req1.setArgs(new Object[]{1});
+                req1.setArgs(new Object[]{});
 
                 ResponseMessage resp1 = remoteCall(req1);
-                ServerException serverError = resp1.getServerError();
-                if (serverError != null) {
-                    log.error(serverError.getMessage());
-                } else {
-                    log.debug("Response from server: seq={}, result={}", resp1.getSeq(), resp1.getResult());
-                }
+                log.debug("Response from server: seq={}, result={}", resp1.getSeq(), resp1.getResult());
 
-/*
                 RequestMessage req2 = new RequestMessage();
                 req2.setSeq(i++);
                 req2.setServiceName("dateTime");
@@ -72,7 +65,15 @@ public class MyClient extends Client {
 
                 ResponseMessage resp3 = remoteCall(req3);
                 log.info("Response from server: seq={}, result={}", resp3.getSeq(), resp3.getResult());
-*/
+
+                RequestMessage req4 = new RequestMessage();
+                req4.setSeq(i++);
+                req4.setServiceName("weather");
+                req4.setMethodName("getWeather");
+                req4.setArgs(new Object[]{});
+
+                ResponseMessage resp4 = remoteCall(req4);
+                log.info("Response from server: seq={}, result={}", resp4.getSeq(), resp4.getResult());
 
                 synchronized (lock) {
                     try {
