@@ -34,13 +34,25 @@ public class MyServer {
 
         serverSocket = new ServerSocket(serverConfig.getPort());
 
-        // TODO: Move to connections pool logic
-        while (connectionsCount < serverConfig.getMaxConnections()) {
+        // TODO: interrupt condition?
+        while (true) {
+            if (connectionsCount < serverConfig.getMaxConnections()) {
                 log.debug("Waiting for clientSocket");
                 Socket clientSocket = serverSocket.accept();
+
                 ServiceHandler serviceHandler = new ServiceHandler(serverConfig, clientSocket);
                 serviceHandler.start();
+
                 connectionsCount++;
+            }
+
+            synchronized (this) {
+                try {
+                    wait(10L);
+                } catch (InterruptedException e) {
+                    log.error(e.getMessage(), e);
+                }
+            }
         }
     }
 

@@ -40,10 +40,6 @@ public class ServiceHandler extends Thread {
 
                 ResponseMessage resp = processMessage(req);
 
-/*
-                resp.setSeq(req.getSeq());
-                resp.setResult(new Date());
-*/
                 out.writeObject(resp);
                 out.flush();
             } while (req.getSeq() < 1057);
