@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class ServiceHandler extends Thread {
+public class ServiceHandler implements Runnable {
 
     private Logger log = LoggerFactory.getLogger(ServiceHandler.class);
 

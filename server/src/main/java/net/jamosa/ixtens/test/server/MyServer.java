@@ -7,6 +7,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 public class MyServer {
 
@@ -16,6 +20,8 @@ public class MyServer {
     private int connectionsCount = 0;
 
     private ServerConfiguration serverConfig;
+
+    private ThreadPoolExecutor executor;
 
     public MyServer() {
     }
@@ -28,6 +34,15 @@ public class MyServer {
         // Loading configuration
         InputStream configInputStream = ClassLoader.class.getResourceAsStream("/server.properties");
         serverConfig = new ServerConfiguration(configInputStream);
+
+        BlockingQueue<Runnable> queue = new ArrayBlockingQueue<Runnable>(100, true);
+        executor = new ThreadPoolExecutor(
+                serverConfig.getThreadPoolCoreSize(),
+                serverConfig.getThreadPoolMaxSize(),
+                serverConfig.getThreadPoolKeepAlive(),
+                TimeUnit.MINUTES,
+                queue
+        );
     }
 
     public void start() throws IOException {
@@ -41,7 +56,7 @@ public class MyServer {
                 Socket clientSocket = serverSocket.accept();
 
                 ServiceHandler serviceHandler = new ServiceHandler(serverConfig, clientSocket);
-                serviceHandler.start();
+                executor.execute(serviceHandler);
 
                 connectionsCount++;
             }

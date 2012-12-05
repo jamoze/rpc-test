@@ -16,9 +16,16 @@ public class ServerConfiguration {
 
     private static final String MAX_CONNECTIONS = "20";
     private static final String DEFAULT_PORT = "1205";
+    private static final String DEFAULT_THREAD_POOL_CORE = "10";
+    private static final String DEFAULT_THREAD_POOL_MAX = "20";
+    private static final String DEFAULT_THREAD_POOL_KEEP_ALIVE = "1";
 
     private int port;
     private int maxConnections;
+
+    private int threadPoolCoreSize;
+    private int threadPoolMaxSize;
+    private int threadPoolKeepAlive;
 
     private Map<String, String> services;
 
@@ -33,6 +40,15 @@ public class ServerConfiguration {
 
         maxConnections = Integer.parseInt(props.getProperty("maxConnections", MAX_CONNECTIONS));
         log.info("Connection pool size: " + maxConnections);
+
+        threadPoolCoreSize = Integer.parseInt(props.getProperty("threadPool.coreSize", DEFAULT_THREAD_POOL_CORE));
+        log.info("Connection pool core size: " + threadPoolCoreSize);
+
+        threadPoolMaxSize = Integer.parseInt(props.getProperty("threadPool.maxSize", DEFAULT_THREAD_POOL_MAX));
+        log.info("Connection pool max size: " + threadPoolMaxSize);
+
+        threadPoolKeepAlive = Integer.parseInt(props.getProperty("threadPool.keepAlive", DEFAULT_THREAD_POOL_KEEP_ALIVE));
+        log.info("Connection pool keep alive: " + threadPoolKeepAlive);
 
         Set<String> propertyNames = props.stringPropertyNames();
         services = new HashMap<String, String>();
@@ -52,6 +68,30 @@ public class ServerConfiguration {
 
     public int getMaxConnections() {
         return maxConnections;
+    }
+
+    public int getThreadPoolCoreSize() {
+        return threadPoolCoreSize;
+    }
+
+    public void setThreadPoolCoreSize(int threadPoolCoreSize) {
+        this.threadPoolCoreSize = threadPoolCoreSize;
+    }
+
+    public int getThreadPoolMaxSize() {
+        return threadPoolMaxSize;
+    }
+
+    public void setThreadPoolMaxSize(int threadPoolMaxSize) {
+        this.threadPoolMaxSize = threadPoolMaxSize;
+    }
+
+    public int getThreadPoolKeepAlive() {
+        return threadPoolKeepAlive;
+    }
+
+    public void setThreadPoolKeepAlive(int threadPoolKeepAlive) {
+        this.threadPoolKeepAlive = threadPoolKeepAlive;
     }
 
     public Map<String, String> getServices() {
